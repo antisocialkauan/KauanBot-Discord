@@ -4,6 +4,7 @@ import asyncio
 import time
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+from website.nhl import getStanding
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = ';')
@@ -28,4 +29,11 @@ async def on_message(message):
 		standings = soup.find('div', {'class': 'sub-title'}).contents
 		wlt = ' '.join(standings)
 		await client.send_message(message.channel, f'Stats (W/L/T) for Los Angeles Kings (LAK): {wlt} LINK: {url}')
+	if message.content.upper().startswith == ';HOCKEY':
+		msg = message.content.split()
+		if len(msg) > 1:
+			team = msg[1]
+			getStanding(team)
+
+
 client.run('NDEzMTczNDk0MTQ3MTg2Njg4.DWlTeg.NPG4iTZiosEmhjhCtjvjVLBM9NE')
