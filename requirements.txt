@@ -2,3 +2,5 @@ discord.py==0.16.8
 aiohttp
 websockets
 chardet
+beautifulsoup4
+lxml
