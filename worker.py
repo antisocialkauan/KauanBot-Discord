@@ -29,11 +29,21 @@ async def on_message(message):
 		standings = soup.find('div', {'class': 'sub-title'}).contents
 		wlt = ' '.join(standings)
 		await client.send_message(message.channel, f'Stats (W/L/T) for Los Angeles Kings (LAK): {wlt} LINK: {url}')
-	if message.content.upper().startswith == ';HOCKEY':
+	if message.content.upper().startswith(';HOCKEY'):
 		msg = message.content.split()
+		print(msg)
 		if len(msg) > 1:
 			team = msg[1]
-			getStanding(team)
+			print(team)
+			t_table = getStanding(team)
+			if t_table == 'NaT':
+				await client.send_message(message.channel, f'<@{userID}> I couldn\'t detect any NHL team, make sure you typed it correctly. (EX. For the Carolina Hurricanes, you could type: Carolina, Hurricanes, or Carolina Hurricanes ' )
+			else:
+				standing = t_table[0]
+				teamname = t_table[1]
+				print('standing: ', standing)
+				print('team name: ', teamname)
+				await client.send_message(message.channel, f'<@{userID}> The standings for {teamname}: {standing}')
 
 
 client.run('NDEzMTczNDk0MTQ3MTg2Njg4.DWlTeg.NPG4iTZiosEmhjhCtjvjVLBM9NE')

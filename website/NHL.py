@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import string
 
 nhl_teams = {
 	'BLACKHAWKS' : 'chi/chicago-blackhawks',
@@ -35,12 +36,15 @@ nhl_teams = {
 	'CAPITALS' : 'wsh/washington-capitals'
 }
 
+# Finds the definition of target.
+# In this case, it's finding the NHL team 
 def findSite(dictionary, target):
 	for key, val in dictionary.items():
 		if key == target:
 			return val
 
-def findTeam(string):
+# Reads what the user typed in, then runs findSite to find the site associated with it.
+def findTeamSite(string):
 	if string.upper() == 'BLACKHAWKS' or string.upper() == 'CHICAGO' or string.upper() == 'CHICAGO BLACKHAWKS':
 		return findSite(nhl_teams, 'BLACKHAWKS')
 	elif string.upper() == 'AVALANCHE' or string.upper() == 'COLORADO' or string.upper() == 'COLORADO AVALANCHE':
@@ -63,7 +67,7 @@ def findTeam(string):
 		return findSite(nhl_teams, 'FLAMES')
 	elif string.upper() == 'OILERS' or string.upper() == 'EDMONTON' or string.upper() == 'EDMONTON OILERS':
 		return findSite(nhl_teams, 'OILERS')
-	elif string.upper() == 'KINGS' or string.upper() == 'LOS ANGELES' or string.upper() == 'LA' or string.upper() == 'LOS ANGELES KINGS' or string.upp() == 'LA KINGS':
+	elif string.upper() == 'KINGS' or string.upper() == 'LOS ANGELES' or string.upper() == 'LA' or string.upper() == 'LOS ANGELES KINGS' or string.upper() == 'LA KINGS':
 		return findSite(nhl_teams, 'KINGS')
 	elif string.upper() == 'SHARKS' or string.upper() == 'SAN JOSE' or string.upper() == 'SAN JOSE SHARKS':
 		return findSite(nhl_teams, 'SHARKS')
@@ -106,9 +110,32 @@ def findTeam(string):
 	else:
 		return 'NaT'
 
+# Properly formats the team from ESPN's website.
+def formatTeamText(teamName):
+	print(teamName)
+	word = teamName[0]
+	words = word.lower()
+	print(words)
+	words1 = string.capwords(words)
+	print(words1)
+	return words1
+
+# Gets the standing of the team, and returns the formatted name of the team.
 def getStanding(team):
-	url = findTeam(team)
-	page = urlopen(url)
-	soup = BeautifulSoup(page.read(), 'lxml')
-	teamstanding = soup.find('div', {'class': 'sub-title'}).contents
-	return teamstanding
+	t_site = findTeamSite(team)
+	if t_site == 'NaT':
+		return 'NaT'
+	else:
+		url = 'http://www.espn.com/nhl/team/_/name/' + t_site # Joins together the beginning of the site link, then joins it with the team's site.
+		print(url)
+		page = urlopen(url)
+		soup = BeautifulSoup(page.read(), 'lxml')
+		teamstanding = soup.find('div', {'class': 'sub-title'}).contents # Standing
+		teamsname = soup.find('a', {'class': 'sub-brand-title'}).b.contents # Team name.
+
+		team_n = formatTeamText(teamsname)
+		team_standing = formatTeamText(teamstanding)
+		print('nhl.py: ', team_n)
+		print('nhl.py: ', team_standing)
+		return (team_standing, team_n)
+
