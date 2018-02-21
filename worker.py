@@ -43,7 +43,10 @@ async def on_message(message):
 				teamname = t_table[1]
 				print('standing: ', standing)
 				print('team name: ', teamname)
-				await client.send_message(message.channel, f'<@{userID}> The standings for {teamname}: {standing}')
+				await client.send_message(message.channel, f'```\n'+
+				f'	{teamname}	\n'+
+				f'	{standing}	\n'+
+				f'```')
 
 
 client.run('NDEzMTczNDk0MTQ3MTg2Njg4.DWlTeg.NPG4iTZiosEmhjhCtjvjVLBM9NE')
