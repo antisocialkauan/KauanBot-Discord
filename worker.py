@@ -12,6 +12,7 @@ client = commands.Bot(command_prefix = ';')
 @client.event
 async def on_ready():
     print('Logged in as %s'  % client.user.name)
+    await client.edit_user(username = 'HockeyBot')
     
 
 @client.event
