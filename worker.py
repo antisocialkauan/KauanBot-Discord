@@ -12,7 +12,6 @@ client = commands.Bot(command_prefix = ';')
 @client.event
 async def on_ready():
     print('Logged in as %s'  % client.user.name)
-    await client.edit_user(username = 'HockeyBot')
     
 
 @client.event
@@ -23,13 +22,6 @@ async def on_message(message):
 	if message.content.upper().startswith('SAY'):
 		args = message.content.split(" ")
 		await client.send_message(message.channel, "%s" % (" ".join(args[1:])))
-	if message.content.upper() == "HOCKEY":
-		url = 'http://www.espn.com/nhl/team/_/name/la/los-angeles-kings'
-		page = urlopen(url)
-		soup = BeautifulSoup(page.read(), 'lxml')
-		standings = soup.find('div', {'class': 'sub-title'}).contents
-		wlt = ' '.join(standings)
-		await client.send_message(message.channel, f'Stats (W/L/T) for Los Angeles Kings (LAK): {wlt} LINK: {url}')
 	if message.content.upper().startswith(';HOCKEY'):
 		msg = message.content.split()
 		print(msg)
@@ -44,10 +36,21 @@ async def on_message(message):
 				teamname = t_table[1]
 				print('standing: ', standing)
 				print('team name: ', teamname)
-				await client.send_message(message.channel, f'```\n'+
-				f'	{teamname}	\n'+
-				f'	{standing}	\n'+
-				f'```')
+				embed = discord.Embed(
+					title = f'{teamname}',
+					color = 0xffffff
+					)
+				embed.add_field(
+					name = f'Standing',
+					value = f'{standing}'
+				)
+				embed.set_footer(
+					text = 'Bot by h0ckey',
+					icon_url = 'https://cdn.discordapp.com/avatars/213854012473212929/55641ca7fdb5ae17f64e97f5b984d0bd.png'
+				)
+				await client.send_message(message.channel, embed = embed)
+	if message.content.upper().startswith(';CLEAR'):
+		await client.purge_from(message.channel)
 
 
 client.run('NDEzMTczNDk0MTQ3MTg2Njg4.DWlTeg.NPG4iTZiosEmhjhCtjvjVLBM9NE')
