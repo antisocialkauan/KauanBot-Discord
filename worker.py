@@ -12,12 +12,17 @@ client = commands.Bot(command_prefix = ';')
 @client.event
 async def on_ready():
     print('Logged in as %s'  % client.user.name)
-    await client.change_presence(game = (discord.Game(name = 'updates /shrug')))
-    
+    await client.change_presence(game = discord.Game(name = 'test'), status = discord.Status('online'))
 
 @client.event
 async def on_message(message):
 	userID = message.author.id
+
+	if message.content.upper().startswith('PING'):
+		game = message.content[6:]
+		await client.change_presence(game=discord.Game(name=game))
+		await client.send_message(message.channel, "Ich habe meinen Status zu " + game + " geaendert")
+
 	if message.content.upper().startswith('PING'):
 		await client.send_message(message.channel, "<@%s> Pong!" % (userID))
 	if message.content.upper().startswith('SAY'):
@@ -35,23 +40,31 @@ async def on_message(message):
 			else:
 				standing = t_table[0]
 				teamname = t_table[1]
+				teamicon = t_table[2]
+				print('icon link: ', teamicon)
 				print('standing: ', standing)
 				print('team name: ', teamname)
 				embed = discord.Embed(
 					title = f'{teamname}',
 					color = 0xffffff
 					)
+				embed.set_thumbnail(
+					url = teamicon
+					)
 				embed.add_field(
-					name = f'Standing',
+					name = 'Standing',
 					value = f'{standing}'
 				)
 				embed.set_footer(
-					text = 'Bot by h0ckey',
-					icon_url = 'https://cdn.discordapp.com/avatars/213854012473212929/55641ca7fdb5ae17f64e97f5b984d0bd.png'
+					text = teamname,
+					icon_url = teamicon
 				)
 				await client.send_message(message.channel, embed = embed)
+
+    
 	if message.content.upper().startswith(';CLEAR'):
-		await client.purge_from(message.channel)
+			await client.purge_from(message.channel)
+
 
 
 client.run('NDEzMTczNDk0MTQ3MTg2Njg4.DWlTeg.NPG4iTZiosEmhjhCtjvjVLBM9NE')

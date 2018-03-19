@@ -132,10 +132,17 @@ def getStanding(team):
 		soup = BeautifulSoup(page.read(), 'lxml')
 		teamstanding = soup.find('div', {'class': 'sub-title'}).contents # Standing
 		teamsname = soup.find('a', {'class': 'sub-brand-title'}).b.contents # Team name.
+		teamicon = soup.find('img', {'class': 'teamimage'})
+
+
 
 		team_n = formatTeamText(teamsname)
 		team_standing = formatTeamText(teamstanding)
+		team_icon = teamicon['src']
 		print('nhl.py: ', team_n)
 		print('nhl.py: ', team_standing)
-		return (team_standing, team_n)
+		return (team_standing, team_n, team_icon)
 
+
+def getPrevGame(team):
+	return 
